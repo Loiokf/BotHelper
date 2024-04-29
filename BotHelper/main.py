@@ -64,7 +64,7 @@ async def process_help_command(message: types.Message):
         parse_mode='HTML'
     )
 
-
+"""
 @dp.message_handler(lambda message: message.text == 'Новости')
 async def news_command(message: types.Message):
     conn = sq.connect("finnews.db")
@@ -84,7 +84,7 @@ async def news_command(message: types.Message):
 @dp.message_handler(lambda message: message.text == 'Курсы валют')
 async def rate_handler(message: types.Message):
     await RateForm.rate_symbol.set()
-    await message.answer('Введите символ валюты')
+    await message.answer('Введите символ валюты')"""
 
 
 @dp.message_handler(lambda message: message.text == 'Погода по городу')
