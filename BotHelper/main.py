@@ -7,6 +7,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from aiogram import Bot, types
 from config import bot_token
+import sqlite3 as sq
 
 from MessageText import HELP_COMMAND, HELLO_TEXT
 from Weather import GetWeather
@@ -51,7 +52,7 @@ async def process_help_command(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == 'Новости')
 async def news_command(message: types.Message):
-    conn = connection()
+    conn = sq.connect("bot_helper.db")
     cur = conn.cursor()
     try:
         cur.execute('SELECT title, text, url FROM FinNews')
@@ -112,7 +113,7 @@ async def weather_command(message: types.Message, state: FSMContext):
 @dp.message_handler(state=RateForm.rate_symbol)
 async def rate_command(message: types.Message, state: FSMContext):
     symbol = message.text.replace(' ', '').upper()
-    conn = connection()
+    conn = sq.connect("bot_helper.db")
     cur = conn.cursor()
     try:
         cur.execute(f"SELECT rate_text, sum_rub FROM Rates WHERE rate_symbol = '{symbol}'")
