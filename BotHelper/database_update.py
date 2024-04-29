@@ -5,7 +5,7 @@ from threading import Timer
 
 
 def update() -> None:
-    conn = sq.connect("bot_helper.db")
+    conn = sq.connect("finnews.db")
     cur = conn.cursor()
     cur.execute(f'DELETE FROM {GetInfoAboutRate.table_name()}')
     cur.execute(f'DELETE FROM {DailyNews.table_name()}')
