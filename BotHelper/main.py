@@ -13,7 +13,6 @@ from MessageText import HELP_COMMAND, HELLO_TEXT
 from Weather import GetWeather
 
 import logging
-from create_connection import connection
 
 bot = Bot(token=bot_token)
 dp = Dispatcher(bot, storage=MemoryStorage())
