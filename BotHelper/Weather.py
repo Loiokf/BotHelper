@@ -19,7 +19,8 @@ class GetWeather:
             "Mist": "Туман \U0001F32B"
         }
         try:
-            r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={open_weather_token}&units=metric")
+            r = requests.get(
+                f"http://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={open_weather_token}&units=metric")
             data = r.json()
             city = data["name"]
             cur_weather = data["main"]["temp"]
@@ -32,20 +33,31 @@ class GetWeather:
             humidity = data["main"]["humidity"]
             pressure = data["main"]["pressure"]
             wind = data["wind"]["speed"]
+            clouds = data["weather"][0]["description"]
+            wind_deg = data["wind"]["deg"]
+            visibility = data["visibility"]
+
             sunrise_timestamp = datetime.datetime.fromtimestamp(data["sys"]["sunrise"])
             sunset_timestamp = datetime.datetime.fromtimestamp(data["sys"]["sunset"])
+
             length_of_the_day = datetime.datetime.fromtimestamp(
                 data["sys"]["sunset"]) - datetime.datetime.fromtimestamp(
                 data["sys"]["sunrise"])
-            self.result.append(f"***{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}")
-            self.result.append(f"Погода в городе: {city}")
-            self.result.append(f"Температура: {cur_weather}C {wd}")
-            self.result.append(f"Влажность: {humidity}%")
-            self.result.append(f"Давление: {pressure} мм.рт.ст")
-            self.result.append(f"Ветер: {wind} м/с")
-            self.result.append(f"Восход солнца: {sunrise_timestamp}")
-            self.result.append(f"Закат солнца: {sunset_timestamp}")
-            self.result.append(f"Продолжительность светового дня: {length_of_the_day}")
+            self.result.append(f"==={datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}===\n"
+                               f"Погода в городе: {city}\n"
+                               f"Температура: {cur_weather}C {wd}\n"
+                               f"Влажность: {humidity}%\n"
+                               f"Давление: {pressure} мм.рт.ст\n"
+                               f"Ветер: {wind} м/с\n"
+                               f"Направление ветра: {wind_deg}°\n"
+                               f"Облачность: {clouds}\n"
+                               f"==========================================================\n"
+                               f"================Менее значимые параметры================\n"
+                               f"=========================================================="
+                               f"Средняя видимость: {visibility}м\n"
+                               f"Восход солнца: {sunrise_timestamp}\n"
+                               f"Закат солнца: {sunset_timestamp}\n"
+                               f"Продолжительность светового дня: {length_of_the_day}")
             return self.result
         except BaseException:
-            return [f"Пожалуйста, проверьте корректность названия вашего города. Вы ввели - {self.city}"]
+            return [f'''Пожалуйста, проверьте корректность названия вашего города. Вы ввели - {self.city}. Введите названия города заново, снова нажав на кнопку "Погода"''']

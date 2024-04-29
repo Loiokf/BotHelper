@@ -8,7 +8,7 @@ from aiogram.utils import executor
 from aiogram import Bot, types
 from config import bot_token
 
-from MessageText import START_COMMAND, HELP_COMMAND
+from MessageText import HELP_COMMAND, HELLO_TEXT
 from Weather import GetWeather
 
 import logging
@@ -18,7 +18,7 @@ bot = Bot(token=bot_token)
 dp = Dispatcher(bot, storage=MemoryStorage())
 logger = logging.getLogger(__name__)
 keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-buttons = ['Помощь', 'Новости', 'Курсы валют', 'Погода']
+buttons = ['Помощь', 'Новости', 'Курсы валют', 'Погода', 'Назад']
 keyboard.add(*buttons)
 
 
@@ -35,7 +35,7 @@ async def start_command(message: types.Message):
     await bot.send_message(
         reply_markup=keyboard,
         chat_id=message.from_user.id,
-        text=START_COMMAND,
+        text=HELLO_TEXT,
         parse_mode='HTML'
     )
 
@@ -74,8 +74,17 @@ async def rate_handler(message: types.Message):
 @dp.message_handler(lambda message: message.text == 'Погода')
 async def weather_handler(message: types.Message):
     await WeatherForm.city.set()
-    await message.answer(f'Введите название города (на en языке)\n'
-                         f'')
+    await message.answer("Введите название города")
+
+
+@dp.message_handler(lambda message: message.text == 'Назад', state='*',)
+@dp.message_handler(Text(equals='отмена', ignore_case=True), state='*')
+async def cancel_handler(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    await state.finish()
+    await message.reply('ОК')
 
 
 @dp.message_handler(state='*', commands='cancel')
