@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from models import Parser, Rate, ABC
-from create_connection import connection
+import sqlite3 as sq
 
 
 def tag_to_string(obj):
@@ -38,7 +38,7 @@ class GetInfoAboutRate(Parser, ABC):
     @classmethod
     def to_db(cls) -> None:
         rates: list[Rate] = cls.get_data()
-        conn = connection()
+        conn = sq.connect("bot_helper.db")
         cur = conn.cursor()
         for rate in rates:
             sql_request = f"INSERT INTO Rates(rate_text, rate_symbol, sum_rub) " \

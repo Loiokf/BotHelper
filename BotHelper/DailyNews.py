@@ -1,8 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from models import Parser, News, ABC
-from create_connection import connection
-
+import sqlite3 as sq
 
 class DailyNews(Parser, ABC):
     URL = "https://www.rbc.ru/short_news"
@@ -49,7 +48,7 @@ class DailyNews(Parser, ABC):
     @classmethod
     def to_db(cls) -> None:
         news: list[News] = cls.get_data()
-        conn = connection()
+        conn = sq.connect("bot_helper.db")
         cur = conn.cursor()
         for news_obj in news:
             sql_request = f"INSERT INTO FinNews(title, text, url) " \

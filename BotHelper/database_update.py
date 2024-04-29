@@ -1,11 +1,11 @@
 from Finance import GetInfoAboutRate
 from DailyNews import DailyNews
-from create_connection import connection
+import sqlite3 as sq
 from threading import Timer
 
 
 def update() -> None:
-    conn = connection()
+    conn = sq.connect("bot_helper.db")
     cur = conn.cursor()
     cur.execute(f'DELETE FROM {GetInfoAboutRate.table_name()}')
     cur.execute(f'DELETE FROM {DailyNews.table_name()}')
